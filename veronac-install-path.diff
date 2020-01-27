@@ -1,0 +1,51 @@
+--- a/src/compiler/CMakeLists.txt
++++ b/src/compiler/CMakeLists.txt
+@@ -82,13 +82,13 @@ endif()
+ add_executable(veronac main.cc)
+ target_link_libraries(veronac interpreter)
+ target_link_libraries(veronac veronac-lib)
+-install(TARGETS veronac RUNTIME DESTINATION .)
++install(TARGETS veronac)
+ 
+ add_executable(veronac-sys main.cc)
+ target_compile_definitions(veronac-sys PRIVATE USE_SYSTEMATIC_TESTING)
+ target_link_libraries(veronac-sys interpreter-sys)
+ target_link_libraries(veronac-sys veronac-lib)
+-install(TARGETS veronac-sys RUNTIME DESTINATION .)
++install(TARGETS veronac-sys)
+ 
+ if (CXX_FILESYSTEM)
+   target_compile_definitions(veronac PRIVATE CXX_FILESYSTEM)
+
+--- a/src/interpreter/CMakeLists.txt
++++ b/src/interpreter/CMakeLists.txt
+@@ -37,5 +37,5 @@ set_target_properties(interpreter-sys-bin PROPERTIES OUTPUT_NAME interpreter-sys
+ target_link_libraries(interpreter-sys-bin interpreter-sys)
+ 
+ 
+-install(TARGETS interpreter-bin RUNTIME DESTINATION .)
+-install(TARGETS interpreter-sys-bin RUNTIME DESTINATION .)
++install(TARGETS interpreter-bin)
++install(TARGETS interpreter-sys-bin)
+
+--- a/src/stdlib/CMakeLists.txt
++++ b/src/stdlib/CMakeLists.txt
+@@ -1 +1 @@
+-install (FILES builtin.verona DESTINATION stdlib)
+\ No newline at end of file
++install (FILES builtin.verona DESTINATION share/verona/stdlib)
+
+--- a/src/compiler/main.cc
++++ b/src/compiler/main.cc
+@@ -191,9 +191,7 @@ namespace verona::compiler
+ #  error "Unsupported platform"
+ #endif
+     char* p = strrchr(buf, slash);
+-    std::string lib = "stdlib";
+-    lib += slash;
+-    lib += "builtin.verona";
++    std::string lib = "../share/verona/stdlib/builtin.verona";
+ 
+ #ifdef WIN32
+     strcpy_s(p + 1, lib.size() + 1, lib.c_str());
+
